@@ -266,7 +266,30 @@ require('lazy').setup({
   --            })
   --        end,
   --    }
-  --
+  {
+    'ThePrimeagen/harpoon',
+    config = function()
+      local mark = require 'harpoon.mark'
+      local ui = require 'harpoon.ui'
+      -- Setup (optional, can leave empty)
+      require('harpoon').setup()
+      -- Keymaps in the same style as Telescope in Kickstart
+      vim.keymap.set('n', '<leader>a', mark.add_file, { desc = 'Harpoon: Add File' })
+      vim.keymap.set('n', '<leader>e', ui.toggle_quick_menu, { desc = 'Harpoon: Toggle Menu' })
+      vim.keymap.set('n', '<leader>1', function()
+        ui.nav_file(1)
+      end, { desc = 'Harpoon: Go to File 1' })
+      vim.keymap.set('n', '<leader>2', function()
+        ui.nav_file(2)
+      end, { desc = 'Harpoon: Go to File 2' })
+      vim.keymap.set('n', '<leader>3', function()
+        ui.nav_file(3)
+      end, { desc = 'Harpoon: Go to File 3' })
+      vim.keymap.set('n', '<leader>4', function()
+        ui.nav_file(4)
+      end, { desc = 'Harpoon: Go to File 4' })
+    end,
+  },
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
@@ -671,10 +694,27 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        powershell_es = {
+          bundle_path = 'C:/Users/YourUser/Documents/PowerShell/EditorServices',
+          on_attach = function(client, bufnr)
+            local function buf_set_keymap(...)
+              vim.api.nvim_buf_set_keymap(bufnr, ...)
+            end
+            local opts = { noremap = true, silent = true }
+            buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+            buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+            buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+            buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+          end,
+          flags = {
+            debounce_text_changes = 150,
+          },
+        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
+        --
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
