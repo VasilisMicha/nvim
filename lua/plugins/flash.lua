@@ -1,7 +1,7 @@
 return {
   "folke/flash.nvim",
   keys = {
-    { "ys", false }, -- explicitly disable ys for flash
+    { "ys", false },
     {
       "s",
       mode = { "n", "x", "o" },
